@@ -21,6 +21,16 @@ export function validateComment(value: string): string | null {
   return null;
 }
 
+type CommentRow = {
+  id: string;
+  beat_id: string;
+  user_id: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+  profiles: { display_name: string | null; avatar_url: string | null } | null;
+};
+
 export const commentsByBeatQuery = (beatId: string) => ({
   queryKey: ["comments", beatId] as const,
   queryFn: async (): Promise<Comment[]> => {
@@ -32,15 +42,18 @@ export const commentsByBeatQuery = (beatId: string) => ({
       .eq("beat_id", beatId)
       .order("created_at", { ascending: false });
     if (error) throw error;
-    return (data ?? []).map((row) => ({
-      id: row.id,
-      beat_id: row.beat_id,
-      user_id: row.user_id,
-      content: row.content,
-      created_at: row.created_at,
-      updated_at: row.updated_at,
-      author_name: (row.profiles as { display_name: string | null }).display_name,
-      author_avatar_url: (row.profiles as { avatar_url: string | null }).avatar_url,
-    }));
+    return (data ?? []).map((row) => {
+      const r = row as unknown as CommentRow;
+      return {
+        id: r.id,
+        beat_id: r.beat_id,
+        user_id: r.user_id,
+        content: r.content,
+        created_at: r.created_at,
+        updated_at: r.updated_at,
+        author_name: r.profiles?.display_name ?? null,
+        author_avatar_url: r.profiles?.avatar_url ?? null,
+      };
+    });
   },
 });

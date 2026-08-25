@@ -46,7 +46,9 @@ export function CommentForm({ beatId }: { beatId: string }) {
         </p>
         <Button
           size="sm"
-          onClick={() => navigate({ to: "/auth", search: { redirect: window.location.pathname } })}
+          onClick={() => {
+            void navigate({ to: "/auth", search: { redirect: window.location.pathname } } as any);
+          }}
         >
           Sign in to comment
         </Button>

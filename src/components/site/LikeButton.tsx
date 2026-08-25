@@ -83,7 +83,7 @@ export function LikeButton({
       onClick={() => {
         if (!user) {
           toast("Sign in to like beats");
-          navigate({ to: "/auth", search: { redirect: window.location.pathname } });
+          navigate({ to: "/auth", search: { redirect: window.location.pathname } } as any);
           return;
         }
         mutation.mutate(!liked);

@@ -40,9 +40,7 @@ export function LikeButton({
     mutationFn: async (nextLiked: boolean) => {
       if (!user) throw new Error("auth");
       if (nextLiked) {
-        const { error } = await supabase
-          .from("likes")
-          .insert({ beat_id: beatId, user_id: user.id });
+        const { error } = await supabase.from("likes").insert({ beat_id: beatId, user_id: user.id });
         if (error && error.code !== "23505") throw error;
         void track("beat_like", { beatId });
       } else {
@@ -72,8 +70,7 @@ export function LikeButton({
     },
   });
 
-  const optimisticLiked = mutation.isPending ? (mutation.variables ?? !!liked) : !!liked;
-  const optimisticCount = (count ?? 0) + (optimisticLiked ? 1 : 0) - (liked ? 1 : 0);
+  const optimisticCount = (count ?? 0) + (liked && !mutation.isPending ? 0 : 0);
 
   return (
     <button
@@ -83,7 +80,7 @@ export function LikeButton({
       onClick={() => {
         if (!user) {
           toast("Sign in to like beats");
-          navigate({ to: "/auth", search: { redirect: window.location.pathname } } as any);
+          navigate({ to: "/auth", search: { redirect: window.location.pathname } });
           return;
         }
         mutation.mutate(!liked);
@@ -94,7 +91,7 @@ export function LikeButton({
         className,
       )}
     >
-      <Heart className={cn("size-4", optimisticLiked && "fill-current")} aria-hidden="true" />
+      <Heart className={cn("size-4", liked && "fill-current")} aria-hidden="true" />
       <span className="tabular-nums">{formatCount(optimisticCount)}</span>
     </button>
   );

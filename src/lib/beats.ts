@@ -69,31 +69,6 @@ export const beatStatsQuery = {
   },
 };
 
-export const beatBySlugQuery = (slug: string) => ({
-  queryKey: ["beat", slug] as const,
-  queryFn: async (): Promise<Beat | null> => {
-    const { data, error } = await supabase
-      .from("beats")
-      .select(BEAT_COLUMNS)
-      .eq("slug", slug)
-      .eq("status", "published")
-      .maybeSingle();
-    if (error) throw error;
-    return (data ?? null) as unknown as Beat | null;
-  },
-});
-
-export const beatStatsByIdQuery = (beatId: string) => ({
-  queryKey: ["beat-stats", beatId] as const,
-  staleTime: 30_000,
-  queryFn: async (): Promise<BeatStats | null> => {
-    const { data, error } = await supabase.rpc("beat_public_stats");
-    if (error) throw error;
-    const rows = (data ?? []) as BeatStats[];
-    return rows.find((r) => r.beat_id === beatId) ?? null;
-  },
-});
-
 export function formatPrice(value: number | null | undefined) {
   if (value == null) return "—";
   return `$${Number(value).toFixed(2)}`;

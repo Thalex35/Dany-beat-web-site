@@ -50,15 +50,15 @@ export function Header() {
 
         <div className="hidden items-center gap-2 md:flex">
           {isAdmin ? (
-            <Button asChild variant="ghost" size="sm">
-              <Link to="/admin">Admin</Link>
-            </Button>
+            <span className="rounded-full bg-surface-2 px-3 py-1.5 text-xs font-medium text-muted-foreground">
+              Admin
+            </span>
           ) : null}
           {user ? (
             <>
-              <Button asChild variant="surface" size="sm">
-                <Link to="/profile">{profile?.display_name ?? "My account"}</Link>
-              </Button>
+              <span className="px-2 text-sm text-muted-foreground">
+                {profile?.display_name ?? user.email ?? "My account"}
+              </span>
               <Button variant="ghost" size="sm" onClick={handleSignOut}>
                 Sign out
               </Button>
@@ -94,23 +94,13 @@ export function Header() {
               </Link>
             ))}
             {isAdmin ? (
-              <Link
-                to="/admin"
-                onClick={() => setOpen(false)}
-                className="rounded-xl px-3 py-2.5 text-sm text-muted-foreground hover:bg-surface hover:text-foreground"
-              >
-                Admin
-              </Link>
+              <span className="rounded-xl px-3 py-2.5 text-sm text-muted-foreground">Admin</span>
             ) : null}
             {user ? (
               <>
-                <Link
-                  to="/profile"
-                  onClick={() => setOpen(false)}
-                  className="rounded-xl px-3 py-2.5 text-sm text-muted-foreground hover:bg-surface hover:text-foreground"
-                >
-                  My account
-                </Link>
+                <span className="rounded-xl px-3 py-2.5 text-sm text-muted-foreground">
+                  {profile?.display_name ?? user.email ?? "My account"}
+                </span>
                 <button
                   onClick={() => {
                     setOpen(false);

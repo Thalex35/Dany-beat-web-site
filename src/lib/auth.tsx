@@ -86,3 +86,23 @@ export function useAuth() {
 export async function signOut() {
   await supabase.auth.signOut();
 }
+
+export type SignInResult = { session: Session | null };
+
+export async function signIn(email: string, password: string): Promise<SignInResult> {
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) throw error;
+  return { session: data.session };
+}
+
+export type SignUpResult = {
+  session: Session | null;
+  /** True when Supabase created the account but requires email confirmation before a session exists. */
+  needsEmailConfirmation: boolean;
+};
+
+export async function signUp(email: string, password: string): Promise<SignUpResult> {
+  const { data, error } = await supabase.auth.signUp({ email, password });
+  if (error) throw error;
+  return { session: data.session, needsEmailConfirmation: !data.session };
+}

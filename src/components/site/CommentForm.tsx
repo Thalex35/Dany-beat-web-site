@@ -50,7 +50,7 @@ export function CommentForm({ beatId }: { beatId: string }) {
             void navigate({
               to: "/auth",
               search: { redirect: window.location.pathname },
-            } as unknown as Parameters<typeof navigate>[0]);
+            });
           }}
         >
           Sign in to comment

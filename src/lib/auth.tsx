@@ -106,3 +106,16 @@ export async function signUp(email: string, password: string): Promise<SignUpRes
   if (error) throw error;
   return { session: data.session, needsEmailConfirmation: !data.session };
 }
+
+export type SignInWithOAuthResult = { session: Session | null };
+
+export async function signInWithGoogle(): Promise<SignInWithOAuthResult> {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${window.location.origin}/auth?redirect=/beats`,
+    },
+  });
+  if (error) throw error;
+  return { session: data.session };
+}

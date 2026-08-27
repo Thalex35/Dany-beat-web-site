@@ -6,6 +6,7 @@ import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/field";
 import { signIn, signUp, useAuth } from "@/lib/auth";
+import { track } from "@/lib/analytics";
 
 /**
  * Only ever redirect back to a path inside this app. Anything else (a full
@@ -108,9 +109,11 @@ function AuthPage() {
     try {
       if (mode === "sign-in") {
         await signIn(email.trim(), password);
+        void track("user_login").catch(() => {});
         await navigate({ to: destination, replace: true });
       } else {
         const result = await signUp(email.trim(), password);
+        void track("user_signup").catch(() => {});
         if (result.needsEmailConfirmation) {
           setInfoMessage("Check your email to confirm your account before signing in.");
           setMode("sign-in");

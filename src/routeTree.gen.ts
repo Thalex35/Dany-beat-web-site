@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
-import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BeatsRouteImport } from './routes/beats'
 import { Route as BeatsIndexRouteImport } from './routes/beats/index'
 import { Route as BeatsSlugRouteImport } from './routes/beats/$slug'
@@ -24,11 +23,6 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BeatsRoute = BeatsRouteImport.update({
@@ -50,7 +44,6 @@ const BeatsSlugRoute = BeatsSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/auth': typeof AuthRoute
   '/beats': typeof BeatsRouteWithChildren
   '/beats/$slug': typeof BeatsSlugRoute
   '/beats/': typeof BeatsIndexRoute
@@ -58,7 +51,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/auth': typeof AuthRoute
   '/beats/$slug': typeof BeatsSlugRoute
   '/beats': typeof BeatsIndexRoute
 }
@@ -66,30 +58,21 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/auth': typeof AuthRoute
   '/beats': typeof BeatsRouteWithChildren
   '/beats/$slug': typeof BeatsSlugRoute
   '/beats/': typeof BeatsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/auth' | '/beats' | '/beats/$slug' | '/beats/'
+  fullPaths: '/' | '/about' | '/beats' | '/beats/$slug' | '/beats/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/auth' | '/beats/$slug' | '/beats'
-  id:
-    | '__root__'
-    | '/'
-    | '/about'
-    | '/auth'
-    | '/beats'
-    | '/beats/$slug'
-    | '/beats/'
+  to: '/' | '/about' | '/beats/$slug' | '/beats'
+  id: '__root__' | '/' | '/about' | '/beats' | '/beats/$slug' | '/beats/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  AuthRoute: typeof AuthRoute
   BeatsRoute: typeof BeatsRouteWithChildren
 }
 
@@ -107,13 +90,6 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/beats': {
@@ -155,7 +131,6 @@ const BeatsRouteWithChildren = BeatsRoute._addFileChildren(BeatsRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  AuthRoute: AuthRoute,
   BeatsRoute: BeatsRouteWithChildren,
 }
 export const routeTree = rootRouteImport

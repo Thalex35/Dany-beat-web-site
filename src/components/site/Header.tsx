@@ -109,7 +109,7 @@ export function Header() {
                   onClick={() => setOpen(false)}
                   className="rounded-xl px-3 py-2.5 text-sm text-muted-foreground hover:bg-surface hover:text-foreground"
                 >
-                  My account
+                  {profile?.display_name ?? "My account"}
                 </Link>
                 <button
                   onClick={() => {
